@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "globals": {
+    "process": true,
+    "__process": true,
+    "require": true,
+    "module": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 9,
+    "sourceType": "module"
+  },
+  "extends": [
+    "eslint:recommended"
+  ]
+}

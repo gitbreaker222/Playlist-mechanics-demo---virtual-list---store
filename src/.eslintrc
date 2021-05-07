@@ -1,0 +1,17 @@
+{
+  "globals": {
+    "jest": true,
+    "beforeEach": true,
+    "describe": true,
+    "test": true,
+    "it": true,
+    "expect": true
+  },
+  "rules": {
+    "no-console": "off",
+    "semi": [
+      "warn",
+      "never"
+    ]
+  }
+}
