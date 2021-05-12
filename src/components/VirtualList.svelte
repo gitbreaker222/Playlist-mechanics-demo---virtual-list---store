@@ -1,9 +1,9 @@
 <script>
-	import { onMount, tick } from 'svelte';
+	import { onMount, tick } from "svelte";
 
 	// props
 	export let items;
-	export let height = '100%';
+	export let height = "100%";
 	export let itemHeight = undefined;
 	// read-only, but visible to consumers via bind:start
 	export let start = 0;
@@ -29,12 +29,12 @@
 	$: if (mounted) refresh(items, viewport_height, itemHeight);
 
 	async function refresh(items, viewport_height, itemHeight) {
-		const isStartOverflow = items.length < start
-		
+		const isStartOverflow = items.length < start;
+
 		if (isStartOverflow) {
-			await scrollToIndex(items.length - 1, {behavior: 'auto'})
+			await scrollToIndex(items.length - 1, { behavior: "auto" });
 		}
-		
+
 		const { scrollTop } = viewport;
 
 		await tick(); // wait until the DOM is up to date
@@ -51,7 +51,7 @@
 				row = rows[i - start];
 			}
 
-			const row_height = height_map[i] = itemHeight || row.offsetHeight;
+			const row_height = (height_map[i] = itemHeight || row.offsetHeight);
 			content_height += row_height;
 			i += 1;
 		}
@@ -63,7 +63,6 @@
 
 		bottom = remaining * average_height;
 		height_map.length = items.length;
-
 	}
 
 	async function handle_scroll() {
@@ -111,43 +110,26 @@
 		// more. maybe we can just call handle_scroll again?
 	}
 
-	export async function scrollToIndex (index, opts) {
-		const {scrollTop, scrollHeight} = viewport;
+	export async function scrollToIndex(index, opts) {
+		const { scrollTop, scrollHeight } = viewport;
 		const itemsDelta = index - start;
 		const _itemHeight = itemHeight || average_height;
 		const distance = itemsDelta * _itemHeight;
 		opts = {
 			left: 0,
 			top: scrollTop + distance,
-			behavior: 'smooth',
-			...opts
+			behavior: "smooth",
+			...opts,
 		};
 		viewport.scrollTo(opts);
 	}
-	
+
 	// trigger initial refresh
 	onMount(() => {
-		rows = contents.getElementsByTagName('svelte-virtual-list-row');
+		rows = contents.getElementsByTagName("svelte-virtual-list-row");
 		mounted = true;
 	});
 </script>
-
-<style>
-	svelte-virtual-list-viewport {
-		position: relative;
-		overflow-y: auto;
-		-webkit-overflow-scrolling:touch;
-		display: block;
-	}
-
-	svelte-virtual-list-contents, svelte-virtual-list-row {
-		display: block;
-	}
-
-	svelte-virtual-list-row {
-		overflow: hidden;
-	}
-</style>
 
 <svelte-virtual-list-viewport
 	bind:this={viewport}
@@ -166,3 +148,21 @@
 		{/each}
 	</svelte-virtual-list-contents>
 </svelte-virtual-list-viewport>
+
+<style>
+	svelte-virtual-list-viewport {
+		position: relative;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		display: block;
+	}
+
+	svelte-virtual-list-contents,
+	svelte-virtual-list-row {
+		display: block;
+	}
+
+	svelte-virtual-list-row {
+		overflow: hidden;
+	}
+</style>
