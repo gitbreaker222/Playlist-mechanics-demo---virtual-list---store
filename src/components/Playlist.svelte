@@ -27,9 +27,10 @@
 	// Constants / Variables
 	let autoscroll = false;
 	let scrollToIndex;
+  let liStart = undefined;
+  let liEnd = undefined;
 
 	$: isPaused = $playerStore.paused;
-	$: isRandom = $playerStore.isRandom;
 	$: filterText = $playerStore.filterText;
 	$: previous = $playerStore.previous;
 	$: current = $playerStore.current;
@@ -49,12 +50,18 @@
 		filterText
 	);
 
+  $: {
+    [current].map(() => {
+      autoscroll = true;
+    });
+  }
+
 	function scrollToCurrent() {
-		const filterRemoved = !filterText;
-		if (autoscroll || filterRemoved) {
+    if (autoscroll && !filterText) {
 			let index = completeList.indexOf(current);
 			if (index > 0) index -= 1; //move current a bit to center
 			scrollToIndex(index);
+      autoscroll = false;
 		}
 	}
 
@@ -81,25 +88,41 @@
 	});
 </script>
 
-<ul class="playlist">
-	<VirtualList items={completeList} let:item={song} bind:scrollToIndex>
+<ul
+  class="playlist _overflow"
+  class:_top={liStart !== 0}
+  class:_bottom={liEnd !== completeList.length}
+>
+  <VirtualList
+    items={completeList}
+    let:item={song}
+    bind:start={liStart}
+    bind:end={liEnd}
+    bind:scrollToIndex
+  >
 		<li class="song {song.type}" on:dblclick={(e) => handleDblClick(e, song)}>
 			<span class="status-icon" />
 			<span class="spacer" />
 			<span class="name">{song.name}</span>
 			<span class="spacer" />
 			{#if song.type === PLAYED}
-				<button on:click={(e) => queueSong(song, previous)}> �+ </button>
+        <button on:click={(e) => queueSong(song, previous)}> play next </button>
 			{:else if song.type === CURRENT}
 				<button on:click={handlePlayPause}>
-					{#if isPaused}�{:else}�{/if}
+          {#if isPaused}play{:else}pause{/if}
 				</button>
 			{:else if song.type === QUEUE}
-				<button on:click={(e) => resetSong(song, next)}> 5 </button>
+        <button on:click={(e) => resetSong(song, next)}>
+          reset to playlist
+        </button>
 			{:else if song.type === PREV_QUEUE}
-				<button on:click={(e) => resetSong(song, nextPrev)}> 5 </button>
+        <button on:click={(e) => resetSong(song, nextPrev)}>
+          reset to history
+        </button>
 			{:else if song.type === REMAINING}
-				<button on:click={(e) => queueSong(song, remaining)}> �+ </button>
+        <button on:click={(e) => queueSong(song, remaining)}>
+          play next
+        </button>
 			{/if}
 		</li>
 	</VirtualList>
@@ -116,6 +139,25 @@
 		flex: 1;
 		overflow: auto;
 		display: block;
+    position: relative;
+    z-index: 0;
+  }
+  .playlist._overflow::before,
+  .playlist._overflow::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+  }
+  .playlist._overflow._top::before {
+    height: 2rem;
+    top: 0;
+    box-shadow: 0 2rem 1rem -1rem white inset;
+  }
+  .playlist._overflow._bottom::after {
+    height: 2rem;
+    bottom: 0;
+    box-shadow: 0 -2rem 1rem -1rem white inset;
 	}
 
 	li {
@@ -135,8 +177,13 @@
 		flex: 1;
 	}
 
+  .PLAYED,
+  .PREV_QUEUE {
+    background: #e3e3e3;
+  }
+
 	.CURRENT {
-		_border-top: 3px solid;
+    border-top: 3px solid;
 		font-weight: bold;
 	}
 
@@ -145,17 +192,17 @@
 		text-align: center;
 	}
 	.CURRENT .status-icon:before {
-		content: "�";
+    content: "playing:";
 	}
 	.PLAYED .status-icon:before,
 	.QUEUE .status-icon:before,
 	.PREV_QUEUE .status-icon:before {
-		content: "+";
+    content: "next";
 	}
 	.PLAYED .status-icon:before {
-		content: "�";
+    content: "";
 	}
 	.PREV_QUEUE .status-icon:before {
-		content: "#";
+    content: "#next";
 	}
 </style>

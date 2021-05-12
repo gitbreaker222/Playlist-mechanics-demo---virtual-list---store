@@ -58,11 +58,11 @@
 </svelte:head>
 
 <div class="controls" style="display: normal">
-	<button on:click={playPrev}><i>�</i> prev</button>
-	<button on:click={playNext}>next <i>{isRandom ? "=" : "�"}</i> </button>
+	<button on:click={playPrev}><i>&lt;&lt;</i> prev</button>
+	<button on:click={playNext}>next <i>{isRandom ? ">?" : ">>"}</i> </button>
 	<label class="button">
 		<input type="checkbox" checked={isRandom} on:click={toggleRandom} />
-		<i>=</i>
+		<i>&gt;?</i>
 	</label>
 	<input
 		class="search"
@@ -114,7 +114,6 @@
 		flex-flow: row wrap;
 		z-index: 1;
 		background: white;
-		box-shadow: 0 0 0.5em 0.5em white;
 	}
 	.controls .search {
 		flex: 1 0 5rem;
