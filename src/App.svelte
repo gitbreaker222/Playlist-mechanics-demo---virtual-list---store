@@ -42,27 +42,12 @@
 	};
 </script>
 
-<svelte:head>
-	<link
-		rel="stylesheet"
-		href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
-	/>
-	<link
-		rel="stylesheet"
-		href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css"
-	/>
-	<link
-		rel="stylesheet"
-		href="//cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.css"
-	/>
-</svelte:head>
-
 <div class="controls" style="display: normal">
 	<button on:click={playPrev}><i>&lt;&lt;</i> prev</button>
 	<button on:click={playNext}>next <i>{isRandom ? ">?" : ">>"}</i> </button>
 	<label class="button">
 		<input type="checkbox" checked={isRandom} on:click={toggleRandom} />
-		<i>&gt;?</i>
+		random
 	</label>
 	<input
 		class="search"
@@ -92,6 +77,7 @@
 	:global(html body) {
 		display: flex;
 		flex-flow: column-reverse nowrap;
+		height: 100vh;
 	}
 	:global(html ul, html li, html button) {
 		margin: 0;
@@ -104,7 +90,12 @@
 		font-size: 1.8rem;
 		font-weight: normal;
 	}
-	button {
+	label input {
+		margin: 0;
+		margin-inline-end: 1ch;
+	}
+	button,
+	label {
 		display: inline-flex;
 		align-items: center;
 	}
@@ -125,6 +116,7 @@
 		flex: 1 0 100%;
 		font-size: 11px;
 	}
+
 	audio {
 		width: 100%;
 		height: 2rem;
