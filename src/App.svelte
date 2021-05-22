@@ -43,11 +43,11 @@
 </script>
 
 <div class="controls" style="display: normal">
-	<button on:click={playPrev}><i>&lt;&lt;</i> prev</button>
-	<button on:click={playNext}>next <i>{isRandom ? ">?" : ">>"}</i> </button>
+	<button on:click={playPrev}><i>⏮️</i></button>
+	<button on:click={playNext}><i>⏭️</i></button>
 	<label class="button">
 		<input type="checkbox" checked={isRandom} on:click={toggleRandom} />
-		random
+		<i>🔀</i>
 	</label>
 	<input
 		class="search"

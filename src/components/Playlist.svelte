@@ -2,7 +2,7 @@
 
 <script>
   import { onMount, afterUpdate, tick } from "svelte";
-  // import { flip } from "svelte/animate";
+  import { flip } from "svelte/animate";
   // import { fade } from "svelte/transition";
   // import VirtualList from '@sveltejs/svelte-virtual-list';
   import VirtualList from "./VirtualList.svelte";
@@ -111,7 +111,9 @@
         <button on:click={(e) => queueSong(song, previous)}> play next </button>
       {:else if song.type === CURRENT}
         <button on:click={handlePlayPause}>
-          {#if isPaused}play{:else}pause{/if}
+          <i>
+            {#if isPaused}▶️{:else}⏸️{/if}
+          </i>
         </button>
       {:else if song.type === QUEUE}
         <button on:click={(e) => resetSong(song, next)}>
@@ -185,8 +187,12 @@
   }
 
   .CURRENT {
-    border-top: 3px solid;
+    box-shadow: 0 2px inset, 0 -2px inset;
     font-weight: bold;
+  }
+
+  .QUEUE {
+    padding-inline-start: 1rem;
   }
 
   .status-icon {
@@ -194,17 +200,17 @@
     text-align: center;
   }
   .CURRENT .status-icon:before {
-    content: "playing:";
+    content: "▶️";
   }
   .PLAYED .status-icon:before,
   .QUEUE .status-icon:before,
   .PREV_QUEUE .status-icon:before {
-    content: "next";
+    content: "⏩";
   }
   .PLAYED .status-icon:before {
-    content: "";
+    content: "⏹️";
   }
   .PREV_QUEUE .status-icon:before {
-    content: "#next";
+    content: "⏹️";
   }
 </style>
